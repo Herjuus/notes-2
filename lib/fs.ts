@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { writeTextFile, BaseDirectory, readTextFile, exists } from '@tauri-apps/api/fs';
 
 export type Config = {
@@ -6,6 +7,8 @@ export type Config = {
 
 export async function createConfig(config: Config) {
     await writeTextFile('App.conf', JSON.stringify(config), { dir: BaseDirectory.AppConfig });
+    const config_file = await loadConfig();
+    return config_file;
 }
 
 export async function loadConfig() {
@@ -30,7 +33,8 @@ export async function saveConfig(path: string) {
       note_path: path,
     }
 
-    createConfig(config)
+    const config_file = createConfig(config)
+    return config_file;
 }
 
 export async function validatePath(path: string) {

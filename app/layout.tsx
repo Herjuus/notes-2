@@ -14,21 +14,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [config, setConfig] = useState<Config | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadConfig()
-    .then((config) => setConfig(config));
+    .then((config) => setConfig(config))
+    .finally(() => setLoading(false));
   }, [])
-  
 
   return (
     <html lang="en">
       <body className={`${inter.className} text-gray-50`}>
-        {config ? (
-          <>{children}</>
-        ) : (
-          <WelcomePage />
-        )}
+        <>
+          {config ? (
+            <>{children}</>
+          ) : (
+            <>
+              {loading ? (
+                <div></div>
+              ) : (
+                <WelcomePage setConfig={setConfig}/>
+              )}
+            </>
+          )}
+        </>
       </body>
     </html>
   );
